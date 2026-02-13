@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Run an AI Agent for $0/Month on Oracle Cloud Free Tier | AI Toolkit</title>
+  <meta name="description" content="Step-by-step guide to running a 24/7 AI agent on Oracle Cloud's free ARM instance. 4 OCPUs, 24GB RAM, $0/month. Covers provisioning, security, and agent installation.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://aitoolkit.pages.dev/posts/run-ai-agent-free-oracle-cloud.html">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="How to Run an AI Agent for $0/Month on Oracle Cloud Free Tier">
+  <meta property="og:description" content="Full walkthrough: Oracle Cloud ARM instance + AI agent framework. Free forever.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "Run an AI Agent for $0/Month on Oracle Cloud Free Tier",
+    "description": "Complete guide to provisioning Oracle Cloud's free ARM instance and deploying a persistent AI agent.",
+    "totalTime": "PT3H",
+    "estimatedCost": { "@type": "MonetaryAmount", "currency": "USD", "value": "0" },
+    "step": [
+      { "@type": "HowToStep", "name": "Create Oracle Cloud Account", "text": "Sign up at cloud.oracle.com with a credit card for verification." },
+      { "@type": "HowToStep", "name": "Provision ARM Instance", "text": "Create an Ampere A1 compute instance with Ubuntu 24.04." },
+      { "@type": "HowToStep", "name": "Secure the Server", "text": "Install Tailscale, lock down firewall, disable password SSH." },
+      { "@type": "HowToStep", "name": "Install Agent Framework", "text": "Install Node.js and your chosen AI agent framework." },
+      { "@type": "HowToStep", "name": "Configure and Deploy", "text": "Set up agent identity, API keys, and heartbeat tasks." }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="/" class="site-logo">AI Toolkit</a>
+      <nav class="site-nav">
+        <a href="/">Articles</a>
+        <a href="/about.html">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="article-header">
+    <span class="category">Tutorial</span>
+    <h1>How to Run an AI Agent for $0/Month on Oracle Cloud Free Tier</h1>
+    <p class="meta">February 13, 2026 &middot; 11 min read</p>
+  </div>
+
+  <article class="article-body">
+
+    <p>Most guides about running an AI agent assume you will spend $20-50 per month on a VPS. That made sense a year ago. In 2026, Oracle Cloud's Always Free tier gives you a server with 4 ARM-based OCPUs, 24GB of RAM, and 200GB of storage — permanently, without a credit card charge. That is more powerful than any $6/month VPS on the market, and it costs nothing.</p>
+
+    <p>This guide walks through the entire process: creating the account, provisioning the instance, locking it down for security, and getting an AI agent running around the clock. Total time is about three hours if you are starting from zero.</p>
+
+    <h2>What You Get with Oracle Cloud Always Free</h2>
+
+    <p>Oracle's Always Free tier includes several compute options, but the one that matters for AI agents is the Ampere A1 Flex instance. The free allocation for each account is up to 4 OCPUs and 24GB of RAM, which you can configure as a single large instance or split across multiple smaller ones.</p>
+
+    <p>For context, here is how those specs compare to popular paid VPS options at similar price points.</p>
+
+    <table class="comp-table">
+      <thead>
+        <tr><th>Provider</th><th>Cost</th><th>CPU</th><th>RAM</th><th>Storage</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Oracle Free Tier</strong></td><td>$0</td><td>4 OCPU (ARM)</td><td>24 GB</td><td>200 GB</td></tr>
+        <tr><td>Hetzner CX22</td><td>$4.49/mo</td><td>2 vCPU</td><td>4 GB</td><td>40 GB</td></tr>
+        <tr><td>Hostinger KVM 2</td><td>$5.99/mo</td><td>2 vCPU</td><td>8 GB</td><td>100 GB</td></tr>
+        <tr><td>DigitalOcean</td><td>$6/mo</td><td>1 vCPU</td><td>1 GB</td><td>25 GB</td></tr>
+      </tbody>
+    </table>
+
+    <p>The ARM architecture (aarch64) is the only thing to keep in mind. Nearly everything works on ARM in 2026, but occasionally you will encounter a package that only distributes x86 binaries. In practice, this is rarely a blocker for agent workloads.</p>
+
+    <h2>Step 1: Create Your Oracle Cloud Account</h2>
+
+    <p>Head to <strong>cloud.oracle.com</strong> and sign up for a free account. You will need a valid credit card for identity verification, but Oracle will not charge it for Always Free resources. Choose the home region closest to you — this cannot be changed later, and it determines where your free instances will run.</p>
+
+    <p>Once your account is active, immediately upgrade to Pay-As-You-Go. This sounds counterintuitive, but it is critical. Oracle may reclaim idle Always Free instances on accounts that remain on the basic free plan. Upgrading to PAYG prevents this while still keeping Always Free resources at $0. Set a budget alert for $1/month so you are notified if anything ever incurs a charge.</p>
+
+    <h2>Step 2: Provision the ARM Instance</h2>
+
+    <p>In the Oracle Cloud console, navigate to Compute and then Instances. Click Create Instance and configure it as follows.</p>
+
+    <p>For the image, select Ubuntu 24.04 (Canonical) — it has the best package support on ARM. Under Shape, choose Ampere A1 Flex, then set it to 4 OCPUs and 24GB of RAM (the full free allocation). Set the boot volume to 200GB.</p>
+
+    <p>During creation, Oracle will generate an SSH key pair. Download the private key immediately — you will not be able to retrieve it later. Alternatively, paste your own public key if you already have one.</p>
+
+    <p>Provisioning takes two to five minutes. Once the instance shows Running, note the public IP address.</p>
+
+    <blockquote>If instance creation fails with a "capacity" error, try a different availability domain within your region, or try again at off-peak hours. Oracle's free ARM capacity is limited and sometimes fully allocated.</blockquote>
+
+    <h2>Step 3: Secure the Server</h2>
+
+    <p>SSH into your new instance using the key you downloaded.</p>
+
+    <pre><code>ssh -i your-key.pem ubuntu@YOUR_PUBLIC_IP</code></pre>
+
+    <p>First, install Tailscale. This creates a secure mesh VPN so you can access your server from anywhere without exposing ports to the public internet.</p>
+
+    <pre><code>curl -fsSL https://tailscale.com/install.sh | sh
+sudo tailscale up</code></pre>
+
+    <p>Follow the authentication link Tailscale prints. Once connected, lock the firewall so that only Tailscale traffic is allowed.</p>
+
+    <pre><code># Allow Tailscale, loopback, and established connections
+sudo iptables -A INPUT -i tailscale0 -j ACCEPT
+sudo iptables -A INPUT -i lo -j ACCEPT
+sudo iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+sudo iptables -A INPUT -j DROP
+
+# Persist the rules across reboots
+sudo apt install iptables-persistent -y</code></pre>
+
+    <p>Install Tailscale on your phone and laptop too. From now on, you access the server via its Tailscale IP (typically 100.x.x.x), never the public IP.</p>
+
+    <p>Finally, disable password-based SSH authentication to eliminate brute-force attacks entirely.</p>
+
+    <pre><code>sudo sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
+sudo systemctl restart sshd</code></pre>
+
+    <h2>Step 4: Prepare the Environment</h2>
+
+    <p>Update the system and add swap space. Swap is a safety net — with 24GB of RAM you will rarely touch it, but having it prevents hard crashes if memory spikes during a heavy generation task.</p>
+
+    <pre><code>sudo apt update && sudo apt upgrade -y
+
+# Add 4GB swap
+sudo fallocate -l 4G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile && sudo swapon /swapfile
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab</code></pre>
+
+    <p>Install Node.js 22, which most modern agent frameworks require.</p>
+
+    <pre><code>curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt install nodejs -y
+node --version  # Should show v22.x</code></pre>
+
+    <h2>Step 5: Install Your Agent Framework</h2>
+
+    <p>With the server provisioned and secured, you are ready to install whichever AI agent framework you prefer. The most popular options in 2026 include OpenClaw, AutoGPT, and CrewAI. Each has its own installation process, but the server is ready for any of them.</p>
+
+    <p>For OpenClaw specifically, the installation is a single command.</p>
+
+    <pre><code>curl -fsSL https://openclaw.ai/install.sh | bash
+openclaw --version  # Confirm installation
+openclaw onboard --install-daemon</code></pre>
+
+    <p>During onboarding, you will be asked to choose an LLM provider. For the most cost-effective setup, start with a provider that offers a generous free tier — Moonshot's Kimi K2.5 and Google's Gemini Flash-Lite both work well. You can always add a premium model like Claude as a fallback later.</p>
+
+    <h2>Step 6: Configure for Long-Running Operation</h2>
+
+    <p>An AI agent needs to survive reboots and run continuously. Most frameworks handle this with a daemon or systemd service. Verify your agent's process management is configured for persistence.</p>
+
+    <pre><code># Check that the agent daemon is running
+systemctl status openclaw-daemon
+
+# If using a different framework, create a systemd service
+# or use pm2 / screen / tmux for process management</code></pre>
+
+    <p>Set up basic monitoring so you know if the agent goes down.</p>
+
+    <pre><code># Simple uptime check via cron (runs every 5 minutes)
+(crontab -l 2>/dev/null; echo "*/5 * * * * pgrep -f 'openclaw' || systemctl restart openclaw-daemon") | crontab -</code></pre>
+
+    <h2>Cost Summary</h2>
+
+    <table class="comp-table">
+      <thead>
+        <tr><th>Component</th><th>Monthly Cost</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Oracle Cloud VPS</td><td>$0</td></tr>
+        <tr><td>Tailscale (personal)</td><td>$0</td></tr>
+        <tr><td>Ubuntu 24.04</td><td>$0</td></tr>
+        <tr><td>LLM API (free tier usage)</td><td>$0 - $5</td></tr>
+        <tr><td><strong>Total</strong></td><td><strong>$0 - $5</strong></td></tr>
+      </tbody>
+    </table>
+
+    <p>The only variable cost is LLM API usage, which depends on how much your agent generates. With careful model routing — using free-tier models for routine tasks and reserving paid models for complex reasoning — most personal agents stay well under $5 per month.</p>
+
+    <div class="cta-box">
+      <h3>Need a Paid Backup?</h3>
+      <p>If Oracle capacity is unavailable in your region, Hostinger VPS offers 8GB RAM from $5.99/mo — the best value paid alternative.</p>
+      <a href="https://www.hostinger.com/vps-hosting" class="cta-btn" rel="nofollow sponsored">Check Hostinger VPS Plans &rarr;</a>
+    </div>
+
+    <h2>What Comes Next</h2>
+
+    <p>With a free, secured, always-on server running your AI agent, the infrastructure layer is solved. The interesting part is what you build on top of it: automated content generation, trend monitoring, social media management, or whatever autonomous workflows you design.</p>
+
+    <p>The point is that the barrier to entry has dropped to zero. You do not need to spend $50 per month on hosting to experiment with AI agents. Oracle's free tier gives you a server that outperforms most budget VPS options, and it will keep running indefinitely at no cost.</p>
+
+  </article>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 AI Toolkit. Built for builders.</p>
+  </footer>
+
+</body>
+</html>
