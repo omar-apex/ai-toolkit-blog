@@ -1,33 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://aitoolkit.pages.dev/</loc>
-    <lastmod>2026-02-13</lastmod>
+    <loc>https://omar-apex.github.io/ai-toolkit-blog/</loc>
+    <lastmod>2026-02-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://aitoolkit.pages.dev/posts/best-vps-hosting-ai-agents-2026.html</loc>
-    <lastmod>2026-02-13</lastmod>
+    <loc>https://omar-apex.github.io/ai-toolkit-blog/posts/best-vps-hosting-ai-agents-2026.html</loc>
+    <lastmod>2026-02-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://aitoolkit.pages.dev/posts/run-ai-agent-free-oracle-cloud.html</loc>
-    <lastmod>2026-02-13</lastmod>
+    <loc>https://omar-apex.github.io/ai-toolkit-blog/posts/run-ai-agent-free-oracle-cloud.html</loc>
+    <lastmod>2026-02-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://aitoolkit.pages.dev/posts/top-seo-tools-ai-content-2026.html</loc>
-    <lastmod>2026-02-13</lastmod>
+    <loc>https://omar-apex.github.io/ai-toolkit-blog/posts/top-seo-tools-ai-content-2026.html</loc>
+    <lastmod>2026-02-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://aitoolkit.pages.dev/about.html</loc>
-    <lastmod>2026-02-13</lastmod>
+    <loc>https://omar-apex.github.io/ai-toolkit-blog/about.html</loc>
+    <lastmod>2026-02-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://omar-apex.github.io/ai-toolkit-blog/products.html</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
 </urlset>

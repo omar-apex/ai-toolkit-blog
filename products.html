@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products — Digital Tools for AI Agent Operators | AI Toolkit</title>
+  <meta name="description" content="Security checklists, configuration templates, and practical guides for running AI agents in production. Built by operators, for operators.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://omar-apex.github.io/ai-toolkit-blog/products.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Products — AI Toolkit">
+  <meta property="og:description" content="Security checklists, configuration templates, and practical guides for running AI agents in production.">
+
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .products-grid { list-style: none; padding: 0; display: grid; gap: 2rem; margin: 2rem 0; }
+    .product-card { background: var(--card-bg, #fff); border: 1px solid var(--border, #e5e5e5); border-radius: 12px; padding: 2rem; }
+    .product-card h2 { font-size: 1.4rem; margin: 0 0 0.5rem; }
+    .product-card .price { font-size: 1.5rem; font-weight: 700; color: var(--accent, #1a73e8); margin: 0.5rem 0; }
+    .product-card .desc { color: var(--text-muted, #666); margin-bottom: 1.5rem; line-height: 1.6; }
+    .product-card ul { margin: 0 0 1.5rem; padding-left: 1.2rem; color: var(--text-muted, #666); }
+    .product-card ul li { margin-bottom: 0.4rem; }
+    .product-card .cta-btn { display: inline-block; background: var(--accent, #1a73e8); color: #fff; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: opacity 0.2s; }
+    .product-card .cta-btn:hover { opacity: 0.9; }
+    .products-intro { max-width: 640px; margin: 0 auto 2rem; text-align: center; color: var(--text-muted, #666); line-height: 1.7; }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="/" class="site-logo">AI Toolkit</a>
+      <nav class="site-nav">
+        <a href="/">Articles</a>
+        <a href="/products.html">Products</a>
+        <a href="/about.html">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="article-header">
+    <h1>Products</h1>
+    <p class="meta">Practical tools for AI agent operators</p>
+  </div>
+
+  <main class="container">
+    <p class="products-intro">Everything here is built from direct experience running autonomous AI agents on VPS infrastructure. No theory — just the checklists, configs, and templates we actually use.</p>
+
+    <ul class="products-grid">
+
+      <li class="product-card">
+        <h2>OpenClaw Security Hardening Checklist</h2>
+        <div class="price">$9</div>
+        <p class="desc">47 actionable security checks organized into 8 categories. Each item includes the exact command to run, what to look for, and the fix if it fails. Print it, work through it once, and your OpenClaw instance goes from "probably fine" to production-hardened.</p>
+        <ul>
+          <li>Server hardening (SSH, firewall, user permissions)</li>
+          <li>OpenClaw config security (gateway, tool deny lists)</li>
+          <li>API key management and rotation schedules</li>
+          <li>Network security (Tailscale, port lockdown)</li>
+          <li>Monitoring, logging, and emergency procedures</li>
+        </ul>
+        <a href="#" class="cta-btn" id="product-checklist">Coming Soon</a>
+      </li>
+
+      <li class="product-card">
+        <h2>SOUL.md Template Pack: 5 Agent Personas</h2>
+        <div class="price">$14</div>
+        <p class="desc">5 production-tested SOUL.md templates, each 80-120+ lines of structured configuration. Drop one into your OpenClaw workspace and your agent is operational in minutes. Includes identity, tasks, approval rules, model routing, and security boundaries.</p>
+        <ul>
+          <li>Content Engine — Autonomous SEO blog writer</li>
+          <li>Research Analyst — Intelligence-gathering agent</li>
+          <li>Social Media Manager — Cross-platform content</li>
+          <li>Code Assistant — Developer ops and PR review</li>
+          <li>Personal Ops — Email triage and daily planning</li>
+        </ul>
+        <a href="#" class="cta-btn" id="product-templates">Coming Soon</a>
+      </li>
+
+    </ul>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 AI Toolkit. Built for builders.</p>
+  </footer>
+
+</body>
+</html>
